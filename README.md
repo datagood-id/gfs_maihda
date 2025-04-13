@@ -64,7 +64,7 @@ employment, gender, marital status, urban/rural.
 ## Strata
 
 The strata is defined by combination of income, education, employment,
-gender, marital status and urban/rural, resulting in 200 theoretical
+gender, marital status and urban/rural, resulting in 95 theoretical
 strata. The individual flourishing score are now viewed as clustered in
 strata, the variables defining the strata are elevated from individual
 to stratum level characteristics. Intersectional strata identities and
@@ -193,20 +193,20 @@ Model is fitted by maximum likelihood estimation (MLE).
 </tr>
 &#10;</table>
 
-<div id="smypblrhzo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#smypblrhzo table {
+<div id="oubabcnazh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#oubabcnazh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-&#10;#smypblrhzo thead, #smypblrhzo tbody, #smypblrhzo tfoot, #smypblrhzo tr, #smypblrhzo td, #smypblrhzo th {
+&#10;#oubabcnazh thead, #oubabcnazh tbody, #oubabcnazh tfoot, #oubabcnazh tr, #oubabcnazh td, #oubabcnazh th {
   border-style: none;
 }
-&#10;#smypblrhzo p {
+&#10;#oubabcnazh p {
   margin: 0;
   padding: 0;
 }
-&#10;#smypblrhzo .gt_table {
+&#10;#oubabcnazh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -231,11 +231,11 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-left-width: 2px;
   border-left-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_caption {
+&#10;#oubabcnazh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-&#10;#smypblrhzo .gt_title {
+&#10;#oubabcnazh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -246,7 +246,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
-&#10;#smypblrhzo .gt_subtitle {
+&#10;#oubabcnazh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -257,7 +257,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
-&#10;#smypblrhzo .gt_heading {
+&#10;#oubabcnazh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -268,12 +268,12 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_bottom_border {
+&#10;#oubabcnazh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_col_headings {
+&#10;#oubabcnazh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -287,7 +287,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_col_heading {
+&#10;#oubabcnazh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -306,7 +306,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-right: 5px;
   overflow-x: hidden;
 }
-&#10;#smypblrhzo .gt_column_spanner_outer {
+&#10;#oubabcnazh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -317,13 +317,13 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-left: 4px;
   padding-right: 4px;
 }
-&#10;#smypblrhzo .gt_column_spanner_outer:first-child {
+&#10;#oubabcnazh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
-&#10;#smypblrhzo .gt_column_spanner_outer:last-child {
+&#10;#oubabcnazh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
-&#10;#smypblrhzo .gt_column_spanner {
+&#10;#oubabcnazh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -334,10 +334,10 @@ Model is fitted by maximum likelihood estimation (MLE).
   display: inline-block;
   width: 100%;
 }
-&#10;#smypblrhzo .gt_spanner_row {
+&#10;#oubabcnazh .gt_spanner_row {
   border-bottom-style: hidden;
 }
-&#10;#smypblrhzo .gt_group_heading {
+&#10;#oubabcnazh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -362,7 +362,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   vertical-align: middle;
   text-align: left;
 }
-&#10;#smypblrhzo .gt_empty_group_heading {
+&#10;#oubabcnazh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -376,13 +376,13 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
-&#10;#smypblrhzo .gt_from_md > :first-child {
+&#10;#oubabcnazh .gt_from_md > :first-child {
   margin-top: 0;
 }
-&#10;#smypblrhzo .gt_from_md > :last-child {
+&#10;#oubabcnazh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
-&#10;#smypblrhzo .gt_row {
+&#10;#oubabcnazh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -400,7 +400,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   vertical-align: middle;
   overflow-x: hidden;
 }
-&#10;#smypblrhzo .gt_stub {
+&#10;#oubabcnazh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -412,7 +412,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#smypblrhzo .gt_stub_row_group {
+&#10;#oubabcnazh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -425,13 +425,13 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-right: 5px;
   vertical-align: top;
 }
-&#10;#smypblrhzo .gt_row_group_first td {
+&#10;#oubabcnazh .gt_row_group_first td {
   border-top-width: 2px;
 }
-&#10;#smypblrhzo .gt_row_group_first th {
+&#10;#oubabcnazh .gt_row_group_first th {
   border-top-width: 2px;
 }
-&#10;#smypblrhzo .gt_summary_row {
+&#10;#oubabcnazh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -440,14 +440,14 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#smypblrhzo .gt_first_summary_row {
+&#10;#oubabcnazh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_first_summary_row.thick {
+&#10;#oubabcnazh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
-&#10;#smypblrhzo .gt_last_summary_row {
+&#10;#oubabcnazh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -456,7 +456,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_grand_summary_row {
+&#10;#oubabcnazh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -465,7 +465,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#smypblrhzo .gt_first_grand_summary_row {
+&#10;#oubabcnazh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -474,7 +474,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-top-width: 6px;
   border-top-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_last_grand_summary_row_top {
+&#10;#oubabcnazh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -483,10 +483,10 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-bottom-width: 6px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_striped {
+&#10;#oubabcnazh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
-&#10;#smypblrhzo .gt_table_body {
+&#10;#oubabcnazh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -494,7 +494,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_footnotes {
+&#10;#oubabcnazh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -507,7 +507,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_footnote {
+&#10;#oubabcnazh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -515,7 +515,7 @@ Model is fitted by maximum likelihood estimation (MLE).
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#smypblrhzo .gt_sourcenotes {
+&#10;#oubabcnazh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -528,64 +528,64 @@ Model is fitted by maximum likelihood estimation (MLE).
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#smypblrhzo .gt_sourcenote {
+&#10;#oubabcnazh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#smypblrhzo .gt_left {
+&#10;#oubabcnazh .gt_left {
   text-align: left;
 }
-&#10;#smypblrhzo .gt_center {
+&#10;#oubabcnazh .gt_center {
   text-align: center;
 }
-&#10;#smypblrhzo .gt_right {
+&#10;#oubabcnazh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-&#10;#smypblrhzo .gt_font_normal {
+&#10;#oubabcnazh .gt_font_normal {
   font-weight: normal;
 }
-&#10;#smypblrhzo .gt_font_bold {
+&#10;#oubabcnazh .gt_font_bold {
   font-weight: bold;
 }
-&#10;#smypblrhzo .gt_font_italic {
+&#10;#oubabcnazh .gt_font_italic {
   font-style: italic;
 }
-&#10;#smypblrhzo .gt_super {
+&#10;#oubabcnazh .gt_super {
   font-size: 65%;
 }
-&#10;#smypblrhzo .gt_footnote_marks {
+&#10;#oubabcnazh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
-&#10;#smypblrhzo .gt_asterisk {
+&#10;#oubabcnazh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
-&#10;#smypblrhzo .gt_indent_1 {
+&#10;#oubabcnazh .gt_indent_1 {
   text-indent: 5px;
 }
-&#10;#smypblrhzo .gt_indent_2 {
+&#10;#oubabcnazh .gt_indent_2 {
   text-indent: 10px;
 }
-&#10;#smypblrhzo .gt_indent_3 {
+&#10;#oubabcnazh .gt_indent_3 {
   text-indent: 15px;
 }
-&#10;#smypblrhzo .gt_indent_4 {
+&#10;#oubabcnazh .gt_indent_4 {
   text-indent: 20px;
 }
-&#10;#smypblrhzo .gt_indent_5 {
+&#10;#oubabcnazh .gt_indent_5 {
   text-indent: 25px;
 }
-&#10;#smypblrhzo .katex-display {
+&#10;#oubabcnazh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
-&#10;#smypblrhzo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+&#10;#oubabcnazh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -600,17 +600,17 @@ Model is fitted by maximum likelihood estimation (MLE).
 
 Variance partition coefficient (VPC) measures the proportion of
 individual heterogeneity which lies between strata. The variance in
-individual flourishing is 0.02% between strata means. There is less
+individual flourishing is 0.03% between strata means. There is less
 variation between strata means, than within strata. Therefore, the
 strata has very low discriminatory accuracy. The strata tells us very
 little about individual toothache.
 
-The VPC adjusted is just 0.03% which is too little for interaction
+The VPC adjusted is just 0.04% which is too little for interaction
 effects to explain the variation.
 
 Percentage change in variance (PCV) measures the degree to which we
 explain the overall sociodemographic variation by just the main effects.
-The variation of sociodemographic main effects is -21.67%.
+The variation of sociodemographic main effects is -33.08%.
 
 ![](gfs_bmi_files/figure-commonmark/unnamed-chunk-19-1.png)
 
