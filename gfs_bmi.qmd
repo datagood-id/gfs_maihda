@@ -51,11 +51,11 @@ gfs_sweden_2 <- gfs_sweden |>
 
 gfs_sweden_2 <- gfs_sweden_2 |> 
   filter(if_all(-INCOME, \(x) (x > 0) & (x <= 97))) |> 
-  filter(if_all(INCOME, \(x) (x > 0) & (x < 9900)))
+  filter(if_all(INCOME, \(x) (x > 0) & (x < 9900))) |> 
+  filter(GENDER != 3)
 
 gfs_sweden_2 <- gfs_sweden_2 |> 
-  mutate(INCOME = case_when(INCOME <= 2304 ~ "Low",
-                            INCOME <= 2308 ~ "Medium",
+  mutate(INCOME = case_when(INCOME <= 2307 ~ "Low",
                             INCOME <= 2312 ~ "High"),
          EDUCATION_3 = case_match(EDUCATION_3,
                                   1 ~ "Elementary",
@@ -65,16 +65,15 @@ gfs_sweden_2 <- gfs_sweden_2 |>
                                 EMPLOYMENT > 2 ~ "Unemployed"),
          GENDER = case_match(GENDER,
                              1 ~ "Male",
-                             2 ~ "Female",
-                             3 ~ "Other"),
+                             2 ~ "Female"),
          MARITAL_STATUS = case_when(MARITAL_STATUS == 2 ~ "Married",
                                     MARITAL_STATUS != 2 ~ "Not married"),
          URBAN_RURAL = case_when(URBAN_RURAL <= 2 ~ "Rural",
                                  URBAN_RURAL <= 4 ~ "Urban")) |> 
-  mutate(INCOME = factor(INCOME, c("Low","Medium","High")),
+  mutate(INCOME = factor(INCOME, c("Low","High")),
          EDUCATION_3 = factor(EDUCATION_3, c("Elementary","High school","University")),
          EMPLOYMENT = factor(EMPLOYMENT, c("Unemployed","Employed")),
-         GENDER = factor(GENDER, c("Other","Male","Female")),
+         GENDER = factor(GENDER, c("Male","Female")),
          MARITAL_STATUS = factor(MARITAL_STATUS, c("Not married","Married")),
          URBAN_RURAL = factor(URBAN_RURAL, c("Rural","Urban")))
 
@@ -92,7 +91,7 @@ gfs_sweden_2 <- gfs_sweden_2 |>
 
 ## Data
 
-Data were drawn from Global Flourishing Study in Sweden. Sample consists of 10754 respondents after being cleaned. The outcome is flourishing score. The sociodemographic characteristics are: income, education, employment, gender, marital status, urban/rural.
+Data were drawn from Global Flourishing Study in Sweden. Sample consists of 8602 respondents after being cleaned. The outcome is flourishing score. The sociodemographic characteristics are: income, education, employment, gender, marital status, urban/rural.
 
 ```{r}
 gfs_sweden_2 |> 
@@ -274,12 +273,10 @@ m1 <- brm(flourishing ~ 1 + income + education_3 + employment + gender + marital
 tab_model(m0, m1,
           dv.labels = rep("Mental health", 2),
           pred.labels = c("Intercept",
-                          "Income: Medium",
                           "Income: High",
                           "Education: High school",
                           "Education: University",
                           "Employed",
-                          "Gender: Male",
                           "Gender: Female",
                           "Married",
                           "Urban"))
@@ -316,7 +313,7 @@ fit_sum |>
   gt()
 ```
 
-Variance partition coefficient (VPC) measures the proportion of individual heterogeneity which lies between strata. The variance in individual BMI is 0.02% between strata means. There is less variation between strata means, than within strata. Therefore, the strata has very low discriminatory accuracy. The strata tells us very little about individual toothache.
+Variance partition coefficient (VPC) measures the proportion of individual heterogeneity which lies between strata. The variance in individual flourishing is 0.02% between strata means. There is less variation between strata means, than within strata. Therefore, the strata has very low discriminatory accuracy. The strata tells us very little about individual toothache.
 
 The VPC adjusted is just 0.03% which is too little for interaction effects to explain the variation.
 
