@@ -115,7 +115,7 @@ gfs_sweden_2 |>
        y = "Frequency",
        title = "Flourishing distribution") +
   #scale_y_continuous(limits = c(0,6000)) +
-  annotate("table", x = 50, y = 1000,  
+  annotate("table", x = 50, y = 800,  
            hjust = 0, vjust = 0.9, size = 3,
            label = list(gfs_sweden_2 |> 
                           filter(!is.na(flourishing)) |> 
@@ -183,7 +183,7 @@ gfs_sweden_2 |>
 
 ## Strata
 
-The strata is defined by combination of income, education, employment, gender, marital status and urban/rural, resulting in 200 theoretical strata. The individual flourishing score are now viewed as clustered in strata, the variables defining the strata are elevated from individual to stratum level characteristics. Intersectional strata identities and even the characteristics defining them are no longer modeled as personal characteristics (risking "blaming the victim"), but are now modeled as social contexts viewed as encompassing the broader shared social experiences of individuals in each strata.
+The strata is defined by combination of income, education, employment, gender, marital status and urban/rural, resulting in 95 theoretical strata. The individual flourishing score are now viewed as clustered in strata, the variables defining the strata are elevated from individual to stratum level characteristics. Intersectional strata identities and even the characteristics defining them are no longer modeled as personal characteristics (risking "blaming the victim"), but are now modeled as social contexts viewed as encompassing the broader shared social experiences of individuals in each strata.
 
 ```{r}
 gfs_sweden_2_id <- gfs_sweden_2 |> 
@@ -201,7 +201,7 @@ gfs_sweden_2_id |>
   labs(x = "Strata size",
        y = "Frequency",
        title = "Strata size distribution") +
-  annotate("table", x = 200, y = 40,  
+  annotate("table", x = 200, y = 20,  
            hjust = 0, vjust = 0.9, size = 3,
            label = list(gfs_sweden_2_id |> 
                           summarise(Mean = mean(n),
@@ -222,10 +222,10 @@ gfs_sweden_2_id |>
   geom_point(col = viridis(1, begin = 0.2)) +
   geom_hline(yintercept = gfs_sweden_2_id |> pull(flourishing) |> mean(),
              linetype = "dashed", alpha = 0.5) +
-  annotate("text", x = 100, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+  annotate("text", x = 95, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
            vjust = 1.2, hjust = 0.7, size = 3, 
            label = paste("Mean =", gfs_sweden_2_id |> pull(flourishing) |> mean() |> round(2))) +
-  scale_x_continuous(limits = c(0,200)) +
+  scale_x_continuous(limits = c(0,95)) +
   labs(x = "Strata rank",
        y = "Flourishing",
        title = "Flourishing means by strata")
@@ -238,10 +238,10 @@ gfs_sweden_2_id |>
   geom_point(alpha = 0.5, shape = 16, col = viridis(1, begin = 0)) +
   geom_hline(yintercept = gfs_sweden_2_id |> pull(flourishing) |> mean(),
              linetype = "dashed", alpha = 0.5) +
-  annotate("text", x = 300, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+  annotate("text", x = 500, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
            vjust = -0.2, hjust = 0.7, size = 3, 
            label = paste("Mean =", gfs_sweden_2_id |> pull(flourishing) |> mean() |> round(2))) +
-  scale_x_continuous(expand = expansion(c(0.01,0.05)), limits = c(0,305)) +
+  scale_x_continuous(expand = expansion(c(0.01,0.05)), limits = c(0,500)) +
   labs(x = "Strata size",
        y = "Flourishing",
        title = "Flourishing means by strata size")
@@ -313,11 +313,11 @@ fit_sum |>
   gt()
 ```
 
-Variance partition coefficient (VPC) measures the proportion of individual heterogeneity which lies between strata. The variance in individual flourishing is 0.02% between strata means. There is less variation between strata means, than within strata. Therefore, the strata has very low discriminatory accuracy. The strata tells us very little about individual toothache.
+Variance partition coefficient (VPC) measures the proportion of individual heterogeneity which lies between strata. The variance in individual flourishing is 0.03% between strata means. There is less variation between strata means, than within strata. Therefore, the strata has very low discriminatory accuracy. The strata tells us very little about individual toothache.
 
-The VPC adjusted is just 0.03% which is too little for interaction effects to explain the variation.
+The VPC adjusted is just 0.04% which is too little for interaction effects to explain the variation.
 
-Percentage change in variance (PCV) measures the degree to which we explain the overall sociodemographic variation by just the main effects. The variation of sociodemographic main effects is -21.67%. 
+Percentage change in variance (PCV) measures the degree to which we explain the overall sociodemographic variation by just the main effects. The variation of sociodemographic main effects is -33.08%. 
 
 ```{r, eval=F}
 pred <- m0 |> 
@@ -340,10 +340,10 @@ pred_m0 |>
                  alpha = 0.5) +
   geom_hline(yintercept = pred_m0 |> pull(.value) |> mean(),
              linetype = "dashed", alpha = 0.5) +
-  annotate("text", x = 230, y = pred_m0 |> pull(.value) |> mean(),
+  annotate("text", x = 110, y = pred_m0 |> pull(.value) |> mean(),
            vjust = 1.2, hjust = 0.7, size = 3, 
            label = paste("Mean =", pred_m0 |> pull(.value) |> mean() |> round(2))) +
-  scale_x_continuous(limits = c(0,230)) +
+  scale_x_continuous(limits = c(0,110)) +
   labs(x = "Strata rank",
        y = "Flourishing",
        title = "Predicted flourishing strata means: Model 0")
@@ -370,10 +370,10 @@ pred_m1 |>
                  alpha = 0.5) +
   geom_hline(yintercept = pred_m1 |> pull(.value) |> mean(),
              linetype = "dashed", alpha = 0.5) +
-  annotate("text", x = 230, y = pred_m1 |> pull(.value) |> mean(),
+  annotate("text", x = 110, y = pred_m1 |> pull(.value) |> mean(),
            vjust = 1.2, hjust = 0.7, size = 3, 
            label = paste("Mean =", pred_m1 |> pull(.value) |> mean() |> round(2))) +
-  scale_x_continuous(limits = c(0,230)) +
+  scale_x_continuous(limits = c(0,110)) +
   labs(x = "Strata rank",
        y = "BMI",
        title = "Predicted BMI strata means: Model 1")
