@@ -1,0 +1,392 @@
+---
+title: "Global Flourishing Study MAIHDA"
+format: 
+  gfm:
+    warning: false
+    echo: false
+---
+
+Intersectionality is the study of how multiple sociodemographic identities intersect and interact to create unique experiences of discrimination and privilege that result in inequalities in individual outcomes. Intersectionality makes visible the experiences of hidden marginalized populations.
+
+From quantitative data analysis perspective, a natural approach to study intersectional sociodemographic inequalities in individual outcomes is to estimate linear regressions of the individual outcome of interest on their sociodemographic characteristics and their interactions. As we introduce further sociodemographic characteristics, it proves statistically and interpretationally challenging to also introduce more and more interactions, many imprecisely estimated parameters and risk of type I errors. As a result, interactions effects and therefore intersectionality in individual outcomes is typically under explored, running the risk of misunderstanding or even missing important marginalized populations.
+
+Intersectional Multilevel Analysis of Individual Heterogeneity and Discriminatory Accuracy (MAIHDA) aims to address these challenges, a systematic approach to explore many and complex interaction effects. Intersectional MAIHDA involves an innovative application of two-level linear regression of individual outcomes where individuals are modeled as clustered in 10s or even 100s of strata defined by the combinations of their sociodemographics characteristics, interest lies in studying how mean outcomes vary across strata. The approach was proposed by Evans et al. (2018) and has been further developed by Evans, Merlo, Leckie, and others.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(brms)
+library(sjPlot)
+library(gt)
+library(ggdist)
+library(tidybayes)
+library(ggh4x)
+library(viridis)
+library(ggpmisc)
+library(e1071)
+library(modelsummary)
+```
+
+```{r}
+theme_set(theme_minimal())
+theme_update(panel.grid.minor = element_blank(),
+             panel.grid.major.x = element_blank(),
+             plot.title.position = "plot")
+```
+
+```{r}
+load("input/gfs_maihda.rda")
+```
+
+```{r, eval=F}
+gfs_sweden <- read_csv("input/gfs_sweden_w1_perturbed_randomized_sample.csv")
+```
+
+```{r, eval=F}
+gfs_sweden_2 <- gfs_sweden |> 
+  select(INCOME, EDUCATION_3, EMPLOYMENT, GENDER, MARITAL_STATUS, URBAN_RURAL,
+         
+         LIFE_SAT, HAPPY, PHYSICAL_HLTH, MENTAL_HEALTH, WORTHWHILE, LIFE_PURPOSE, 
+         PROMOTE_GOOD, GIVE_UP, CONTENT, SAT_RELATNSHP, EXPENSES, WORRY_SAFETY)
+
+gfs_sweden_2 <- gfs_sweden_2 |> 
+  filter(if_all(-INCOME, \(x) (x > 0) & (x <= 97))) |> 
+  filter(if_all(INCOME, \(x) (x > 0) & (x < 9900)))
+
+gfs_sweden_2 <- gfs_sweden_2 |> 
+  mutate(INCOME = case_when(INCOME <= 2304 ~ "Low",
+                            INCOME <= 2308 ~ "Medium",
+                            INCOME <= 2312 ~ "High"),
+         EDUCATION_3 = case_match(EDUCATION_3,
+                                  1 ~ "Elementary",
+                                  2 ~ "High school",
+                                  3 ~ "University"),
+         EMPLOYMENT = case_when(EMPLOYMENT <= 2 ~ "Employed",
+                                EMPLOYMENT > 2 ~ "Unemployed"),
+         GENDER = case_match(GENDER,
+                             1 ~ "Male",
+                             2 ~ "Female",
+                             3 ~ "Other"),
+         MARITAL_STATUS = case_when(MARITAL_STATUS == 2 ~ "Married",
+                                    MARITAL_STATUS != 2 ~ "Not married"),
+         URBAN_RURAL = case_when(URBAN_RURAL <= 2 ~ "Rural",
+                                 URBAN_RURAL <= 4 ~ "Urban")) |> 
+  mutate(INCOME = factor(INCOME, c("Low","Medium","High")),
+         EDUCATION_3 = factor(EDUCATION_3, c("Elementary","High school","University")),
+         EMPLOYMENT = factor(EMPLOYMENT, c("Unemployed","Employed")),
+         GENDER = factor(GENDER, c("Other","Male","Female")),
+         MARITAL_STATUS = factor(MARITAL_STATUS, c("Not married","Married")),
+         URBAN_RURAL = factor(URBAN_RURAL, c("Rural","Urban")))
+
+gfs_sweden_2 <- gfs_sweden_2 |> 
+  mutate(flourishing = rowSums(across(LIFE_SAT:WORRY_SAFETY)),
+         .keep = "unused")
+
+gfs_sweden_2 <- gfs_sweden_2 |> 
+  mutate(strata = paste(INCOME, EDUCATION_3, EMPLOYMENT, GENDER, MARITAL_STATUS, 
+                        URBAN_RURAL, sep = "_"))
+
+gfs_sweden_2 <- gfs_sweden_2 |> 
+  rename_with(tolower)
+```
+
+## Data
+
+Data were drawn from Global Flourishing Study in Sweden. Sample consists of 10754 respondents after being cleaned. The outcome is flourishing score. The sociodemographic characteristics are: income, education, employment, gender, marital status, urban/rural.
+
+```{r}
+gfs_sweden_2 |> 
+  select(-strata) |> 
+  rename_with(str_to_title) |> 
+  rename(Education = Education_3,
+         `Marital status` = Marital_status,
+         `Urban/rural` = Urban_rural) |> 
+  mutate(across(where(is.factor), \(x) factor(x, rev(levels(x))))) |> 
+  datasummary_balance(formula =~ 1)
+```
+
+```{r}
+gfs_sweden_2 |> 
+  ggplot(aes(flourishing)) +
+  geom_histogram(fill = viridis(1, begin = 0.2))  +
+  stat_function(fun = function(x) dnorm(x, mean = mean(gfs_sweden_2$flourishing), 
+                                        sd = sd(gfs_sweden_2$flourishing)) * nrow(gfs_sweden_2) * 2,
+                alpha = 0.5, linetype = "dashed", size = 1) +
+  labs(x = "Flourishing",
+       y = "Frequency",
+       title = "Flourishing distribution") +
+  #scale_y_continuous(limits = c(0,6000)) +
+  annotate("table", x = 50, y = 1000,  
+           hjust = 0, vjust = 0.9, size = 3,
+           label = list(gfs_sweden_2 |> 
+                          filter(!is.na(flourishing)) |> 
+                          summarise(Mean = mean(flourishing),
+                                    Min = min(flourishing),
+                                    `25th` = quantile(flourishing, 0.25),
+                                    `50th` = quantile(flourishing, 0.5),
+                                    `75th` = quantile(flourishing, 0.75),
+                                    Max = max(flourishing)) |> 
+                          pivot_longer(everything()) |> 
+                          mutate(value = round(value, 2)) |> 
+                          rename(Stat = name, `Flourishing` = value)))
+```
+
+```{r}
+gfs_sweden_2 |> 
+  select(income:urban_rural) |> 
+  pivot_longer(everything()) |> 
+  summarise(n = n(),
+            .by = c(name, value)) |> 
+  mutate(name = str_to_sentence(name),
+         name = case_match(name, .default = name,
+                           "Education_3" ~ "Education"),
+         name = gsub("_", " ", name)) |> 
+  mutate(p = n / sum(n) * 100,
+         lab = paste0(n, "\n(", round(p), "%)"),
+         .by = name) |> 
+  ggplot(aes(x = value,
+             y = n)) +
+  facet_wrap(~ name, scales = "free_x", strip.position = "bottom") +
+  geom_col(width = 0.6, fill = viridis(1, begin = 0.2)) +
+  geom_text(aes(label = lab),
+            size = 2.5, vjust = -0.4) +
+  scale_y_continuous(limits = c(0,9500), expand = expansion(c(0.01, 0.1))) +
+  scale_x_discrete(labels = c("High school" = "HS")) +
+  labs(x = element_blank(),
+       y = "Frequency",
+       title = "Demographic distribution") +
+  theme(strip.placement = "outside")
+```
+
+```{r}
+gfs_sweden_2 |> 
+  select(-strata) |> 
+  pivot_longer(-flourishing) |> 
+  summarise(across(flourishing, ~ mean(., na.rm = T)),
+            .by = c(name, value)) |> 
+  mutate(name = str_to_sentence(name),
+         name = case_match(name, .default = name,
+                           "Education_3" ~ "Education"),
+         name = gsub("_", " ", name)) |> 
+  ggplot(aes(x = value,
+             y = flourishing)) +
+  facet_wrap(~ name, scales = "free_x", strip.position = "bottom") +
+  geom_col(width = 0.6, fill = viridis(1, begin = 0.2)) +
+  geom_text(aes(label = round(flourishing, 2)),
+            size = 2.5, vjust = -1) +
+  scale_y_continuous(limits = c(0,100), expand = expansion(c(0.01, 0.1))) +
+  scale_x_discrete(labels = c("High school" = "HS")) +
+  labs(x = element_blank(),
+       y = "Flourishing",
+       title = "Flourishing means by demographic") +
+  theme(strip.placement = "outside")
+```
+
+## Strata
+
+The strata is defined by combination of income, education, employment, gender, marital status and urban/rural, resulting in 200 theoretical strata. The individual flourishing score are now viewed as clustered in strata, the variables defining the strata are elevated from individual to stratum level characteristics. Intersectional strata identities and even the characteristics defining them are no longer modeled as personal characteristics (risking "blaming the victim"), but are now modeled as social contexts viewed as encompassing the broader shared social experiences of individuals in each strata.
+
+```{r}
+gfs_sweden_2_id <- gfs_sweden_2 |> 
+  summarise(flourishing = mean(flourishing, na.rm = T),
+            n = n(),
+            .by = income:urban_rural) |> 
+  arrange(flourishing) |> 
+  mutate(id = 1:n())
+```
+
+```{r}
+gfs_sweden_2_id |> 
+  ggplot(aes(n)) +
+  geom_histogram(fill = viridis(1, begin = 0.2)) +
+  labs(x = "Strata size",
+       y = "Frequency",
+       title = "Strata size distribution") +
+  annotate("table", x = 200, y = 40,  
+           hjust = 0, vjust = 0.9, size = 3,
+           label = list(gfs_sweden_2_id |> 
+                          summarise(Mean = mean(n),
+                                    Min = min(n),
+                                    `25th` = quantile(n, 0.25),
+                                    `50th` = quantile(n, 0.5),
+                                    `75th` = quantile(n, 0.75),
+                                    Max = max(n)) |> 
+                          pivot_longer(everything()) |> 
+                          mutate(value = round(value)) |> 
+                          rename(Stat = name, `Strata size` = value)))
+```
+
+```{r}
+gfs_sweden_2_id |> 
+  ggplot(aes(x = id,
+             y = flourishing)) +
+  geom_point(col = viridis(1, begin = 0.2)) +
+  geom_hline(yintercept = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+             linetype = "dashed", alpha = 0.5) +
+  annotate("text", x = 100, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+           vjust = 1.2, hjust = 0.7, size = 3, 
+           label = paste("Mean =", gfs_sweden_2_id |> pull(flourishing) |> mean() |> round(2))) +
+  scale_x_continuous(limits = c(0,200)) +
+  labs(x = "Strata rank",
+       y = "Flourishing",
+       title = "Flourishing means by strata")
+```
+
+```{r}
+gfs_sweden_2_id |> 
+  ggplot(aes(x = n,
+             y = flourishing)) +
+  geom_point(alpha = 0.5, shape = 16, col = viridis(1, begin = 0)) +
+  geom_hline(yintercept = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+             linetype = "dashed", alpha = 0.5) +
+  annotate("text", x = 300, y = gfs_sweden_2_id |> pull(flourishing) |> mean(),
+           vjust = -0.2, hjust = 0.7, size = 3, 
+           label = paste("Mean =", gfs_sweden_2_id |> pull(flourishing) |> mean() |> round(2))) +
+  scale_x_continuous(expand = expansion(c(0.01,0.05)), limits = c(0,305)) +
+  labs(x = "Strata size",
+       y = "Flourishing",
+       title = "Flourishing means by strata size")
+```
+
+## Model fit
+
+Model null measures the extent to which individual outcome heterogeneity is explained by sociodemographic intersections vs other factors. Optimally predicts the mean outcome for each stratum. 
+
+Model full decomposes sociodemographic mean outcomes into additive and non-additive effects and measures relative importance of interactions. Optimally predicts the strata interaction effects with built in control for type I errors of inference.
+
+Model is fitted by maximum likelihood estimation (MLE).
+
+```{r, eval=F}
+m0 <- brm(flourishing ~ 1 + (1|strata), 
+          data = gfs_sweden_2,
+          warmup = 5000, iter = 10000,
+          chain = 1, seed = 1)
+```
+
+```{r, eval=F}
+m1 <- brm(flourishing ~ 1 + income + education_3 + employment + gender + marital_status + urban_rural + (1|strata), 
+          data = gfs_sweden_2,
+          warmup = 5000, iter = 10000,
+          chain = 1, seed = 1)
+```
+
+```{r}
+tab_model(m0, m1,
+          dv.labels = rep("Mental health", 2),
+          pred.labels = c("Intercept",
+                          "Income: Medium",
+                          "Income: High",
+                          "Education: High school",
+                          "Education: University",
+                          "Employed",
+                          "Gender: Male",
+                          "Gender: Female",
+                          "Married",
+                          "Urban"))
+```
+
+```{r}
+fit_sum <- list(m1) |> 
+  map(\(x) list(summary(x)["spec_pars"], 
+                summary(x)["random"][[1]]) |> 
+        map(\(x) x[[1]][1,1]) |> 
+        unlist()) |> 
+  map(\(x) as_tibble_row(x, .name_repair = "unique")) |> 
+  bind_rows() |> 
+  rename_with(~ c("sigma","sd"))
+
+fit_sum <- fit_sum |> 
+  mutate(across(c(sigma,sd), \(x) x^2)) |> 
+  mutate(sigma_m0 = summary(m0)["spec_pars"][[1]][1,1]^2,
+         sd_m0 = summary(m0)["random"][[1]][[1]][1,1]^2) |> 
+  mutate(vpc = sd_m0 / (sd_m0 + sigma_m0) * 100,
+         vpc_adj = sd / (sd + sigma) * 100,
+         pcv = (sd_m0 - sd) / sd_m0 * 100)
+
+fit_sum |> 
+  select(vpc:pcv) |> 
+  pivot_longer(everything(),
+               names_to = "Measure",
+               values_to = "Value") |> 
+  mutate(Measure = case_match(Measure,
+                              "vpc" ~ "VPC",
+                              "vpc_adj" ~ "VPC adj",
+                              "pcv" ~ "PCV"),
+         Value = paste0(round(Value, 2), "%")) |> 
+  gt()
+```
+
+Variance partition coefficient (VPC) measures the proportion of individual heterogeneity which lies between strata. The variance in individual BMI is 0.02% between strata means. There is less variation between strata means, than within strata. Therefore, the strata has very low discriminatory accuracy. The strata tells us very little about individual toothache.
+
+The VPC adjusted is just 0.03% which is too little for interaction effects to explain the variation.
+
+Percentage change in variance (PCV) measures the degree to which we explain the overall sociodemographic variation by just the main effects. The variation of sociodemographic main effects is -21.67%. 
+
+```{r, eval=F}
+pred <- m0 |> 
+  add_fitted_draws(newdata = gfs_sweden_2, allow_new_levels = T) |> 
+  group_by(income, education_3, employment, gender, marital_status, urban_rural) |> 
+  mean_qi(.value)
+
+pred_m0 <- pred |> 
+  filter(if_all(everything(), ~ !is.na(.)))
+```
+
+```{r}
+pred_m0 |> 
+  arrange(.value) |> 
+  mutate(id = 1:n()) |> 
+  ggplot(aes(x = id,
+             y = .value)) +
+  geom_point(col = viridis(1, begin = 0.2)) +
+  geom_linerange(aes(ymin = .lower, ymax = .upper),
+                 alpha = 0.5) +
+  geom_hline(yintercept = pred_m0 |> pull(.value) |> mean(),
+             linetype = "dashed", alpha = 0.5) +
+  annotate("text", x = 230, y = pred_m0 |> pull(.value) |> mean(),
+           vjust = 1.2, hjust = 0.7, size = 3, 
+           label = paste("Mean =", pred_m0 |> pull(.value) |> mean() |> round(2))) +
+  scale_x_continuous(limits = c(0,230)) +
+  labs(x = "Strata rank",
+       y = "Flourishing",
+       title = "Predicted flourishing strata means: Model 0")
+```
+
+```{r, eval=F}
+pred <- m1 |> 
+  add_fitted_draws(newdata = gfs_sweden_2, allow_new_levels = T) |> 
+  group_by(income, education_3, employment, gender, marital_status, urban_rural) |> 
+  mean_qi(.value)
+
+pred_m1 <- pred |> 
+  filter(if_all(everything(), ~ !is.na(.)))
+```
+
+```{r}
+pred_m1 |> 
+  arrange(.value) |> 
+  mutate(id = 1:n()) |> 
+  ggplot(aes(x = id,
+             y = .value)) +
+  geom_point(col = viridis(1, begin = 0.2)) +
+  geom_linerange(aes(ymin = .lower, ymax = .upper),
+                 alpha = 0.5) +
+  geom_hline(yintercept = pred_m1 |> pull(.value) |> mean(),
+             linetype = "dashed", alpha = 0.5) +
+  annotate("text", x = 230, y = pred_m1 |> pull(.value) |> mean(),
+           vjust = 1.2, hjust = 0.7, size = 3, 
+           label = paste("Mean =", pred_m1 |> pull(.value) |> mean() |> round(2))) +
+  scale_x_continuous(limits = c(0,230)) +
+  labs(x = "Strata rank",
+       y = "BMI",
+       title = "Predicted BMI strata means: Model 1")
+```
+
+The caterpillar plot gives a sense of not just the variablity in predicted strata means, but their individual imprecision, and their lack of statistical separation.
+
+```{r, eval=F}
+save(gfs_sweden_2, 
+     m0, m1, 
+     pred_m0, pred_m1,
+     file = "input/gfs_maihda.rda")
+```
